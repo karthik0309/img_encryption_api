@@ -5,12 +5,16 @@ from .serializers import ImageSerializer
 from .models import Images
 from users.models import User
 from .encryption import process_image
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 PATH = os.getcwd()+'/media/'
 
 class ImagesViewset(viewsets.ModelViewSet):
     serializer_class = ImageSerializer
     http_method_names = ['post','get']
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         get_data = self.request.query_params
