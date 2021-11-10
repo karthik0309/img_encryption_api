@@ -3,7 +3,7 @@ from Crypto.Cipher import AES
 from .data_hiding import encode 
 import os
 
-PATH = os.getcwd()+'/img/'
+PATH = os.getcwd()+'/media/'
 
 def pad(data): 
     return data + b"\x00"*(16-len(data)%16)  
