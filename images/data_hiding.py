@@ -12,7 +12,6 @@ def modPix(pix, data):
 
     datalist = genData(data)
     lendata = len(datalist)
-    print(pix)
     imdata = iter(pix)
 
     for i in range(lendata):
@@ -51,6 +50,8 @@ def encode_enc(newimg, data):
     w = newimg.size[0]
     (x, y) = (0, 0)
 
+    print(newimg)
+    print(type(newimg))
     for pixel in modPix(newimg.getdata(), data):
 
         newimg.putpixel((x, y), pixel)
@@ -60,8 +61,8 @@ def encode_enc(newimg, data):
         else:
             x += 1
 
-def encode(img,data):
-    image = Image.open(img, 'r')
+def encode(image,data):
+    print(type(image))
     newimg = image.copy()
     encode_enc(newimg, data)
     newimg.save()

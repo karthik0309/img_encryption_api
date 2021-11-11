@@ -16,8 +16,8 @@ def convert_to_RGB(data):
 def process_image(filename,type,key,message,name): 
     im = Image.open(filename) 
     
-    # if type=='encrypt':
-    #     im = encode(filename,message)
+    if type=='encrypt':
+        im = encode(im,message)
     
     data = im.convert("RGB").tobytes()  
     

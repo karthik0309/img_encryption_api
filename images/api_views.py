@@ -44,6 +44,7 @@ class ImagesViewset(viewsets.ModelViewSet):
         encrypted_img = Images(user=user,
         name='encrypted_'+info['name'],
         image=image_file,
+        
         message=info['message']
         )
 
