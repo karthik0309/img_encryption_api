@@ -1,6 +1,6 @@
 from PIL import Image 
 from Crypto.Cipher import AES 
-from .data_hiding import encode 
+from .data_hiding import decode, encode 
 import os
 
 PATH = os.getcwd()+'/media/'
@@ -16,9 +16,10 @@ def convert_to_RGB(data):
 def process_image(filename,type,key,message,name): 
     im = Image.open(filename) 
     
+    decoded_data=''
     if type=='encrypt':
-        im = encode(im,message)
-    
+        im = encode(filename,message)
+
     data = im.convert("RGB").tobytes()  
     
     original = len(data)  
@@ -26,18 +27,28 @@ def process_image(filename,type,key,message,name):
     secrete_key=key[0:32]
     IV = key[0:16]
 
-    if type=='encrypt':
-        new = convert_to_RGB(aes_cbc_encrypt(secrete_key, pad(data),IV)[:original])  
+    if type=='encrypt_cbc':
+        new = convert_to_RGB(aes_cbc_encrypt(secrete_key, pad(data),IV)[:original]) 
+    elif type=='encrypt_ecb':
+        new = convert_to_RGB(aes_ecb_encrypt(secrete_key, pad(data))[:original])
+    elif type=='decrypt_ecb':
+        new = convert_to_RGB(aes_ecb_decrypt(secrete_key, pad(data))[:original])
     else:
         new = convert_to_RGB(aes_cbc_decrypt(secrete_key, pad(data),IV)[:original])  
     
     im2 = Image.new(im.mode, im.size) 
     im2.putdata(new) 
     
-    if type=='encrypt':
+    if type.startswith('encrypt'):
         im2.save(PATH+'encrypted_'+name+'.png','png')
     else:
         im2.save(PATH+'decrypted_'+name+'.png','png')
+    
+
+    if type.startswith('decrypt'):    
+        decoded_data=decode(PATH+'decrypted_'+name+'.png')
+
+    return decoded_data
 
 def aes_cbc_encrypt(key, data,IV, mode=AES.MODE_CBC): 
     aes = AES.new(key.encode("utf8"), mode, IV.encode("utf8")) 
@@ -53,7 +64,7 @@ def aes_cbc_decrypt(key, data,IV, mode=AES.MODE_CBC):
     new_data = aes.decrypt(data)
     return new_data
 
-def aes_ecb_encrypt(key, data, mode=AES.MODE_ECB): 
+def aes_ecb_decrypt(key, data, mode=AES.MODE_ECB): 
     aes = AES.new(key.encode("utf8"), mode) 
     new_data = aes.decrypt(data) 
     return new_data 

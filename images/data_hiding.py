@@ -50,9 +50,7 @@ def encode_enc(newimg, data):
     w = newimg.size[0]
     (x, y) = (0, 0)
 
-    print(newimg)
-    print(type(newimg))
-    for pixel in modPix(newimg.getdata(), data):
+    for pixel in modPix(Image.Image.getdata(newimg), data):
 
         newimg.putpixel((x, y), pixel)
         if (x == w - 1):
@@ -61,18 +59,17 @@ def encode_enc(newimg, data):
         else:
             x += 1
 
-def encode(image,data):
-    print(type(image))
+def encode(filename,data):
+    image = Image.open(filename, 'r')
     newimg = image.copy()
     encode_enc(newimg, data)
-    newimg.save()
     return newimg
 
 def decode(img):
-    image = Image.open('/media/'+img, 'r')
+    image = Image.open(img, 'r')
 
     data = ''
-    imgdata = iter(image.getdata())
+    imgdata = iter(Image.Image.getdata(image))
 
     while (True):
         pixels = [value for value in imgdata.__next__()[:3] +

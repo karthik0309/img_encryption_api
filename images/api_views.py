@@ -25,7 +25,7 @@ class ImagesViewset(viewsets.ModelViewSet):
         user = User.objects.get(id=info['user'])
 
         print(info)
-        if info['type']=='encrypt':
+        if info['type'].startswith('encrypt'):
             new_img = Images(user=user,
                     name=info['name'],
                     image=info['image'],
@@ -35,18 +35,23 @@ class ImagesViewset(viewsets.ModelViewSet):
             new_img.save()
 
         secrete_key = user.secrete_key
-        process_image(info['image'],info['type'],secrete_key,info['message'],info['name'])
+        decoded_message=process_image(info['image'],info['type'],secrete_key,info['message'],info['name'])
 
-        if info['type']=='encrypt':
+        if info['type'].startswith('encrypt'):
             image_file =PATH+'encrypted_'+info['name']+'.png'
         else:
             image_file =PATH+'decrypted_'+info['name']+'.png'
-        encrypted_img = Images(user=user,
-        name='encrypted_'+info['name'],
-        image=image_file,
-        
-        message=info['message']
-        )
+
+        if info['type'].startswith('encrypt'):
+            encrypted_img = Images(user=user,
+            name='encrypted_'+info['name'],
+            image=image_file,
+            message=info['message'])
+        else:
+            encrypted_img=Images(user=user,
+            name='decrypted_'+info['name'],
+            image=image_file,
+            message=decoded_message)
 
 
         encrypted_img.save()
