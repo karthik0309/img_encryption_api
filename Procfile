@@ -1,1 +1,1 @@
-web: gunicorn image_ency_api.wgsi:application --log-file -
+web: gunicorn image_ency_api.wsgi --log-file -
