@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-5ue3!!#e_ys96pf4r@mf3=n1qwvvdaa!@@&o8i4pb$y*ax9g5$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['http://127.0.0.1:8000/']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -167,6 +167,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Default primary key field type
