@@ -1,9 +1,9 @@
-from rest_framework import generics, viewsets
-from .serializers import UserSerializer,LoginSerializer
 from .models import User
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
-from django.contrib.auth.hashers import make_password,check_password
+from rest_framework import generics, viewsets
+from django.contrib.auth.hashers import make_password
+from .serializers import UserSerializer,LoginSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserViewset(viewsets.ModelViewSet):
     serializer_class = UserSerializer

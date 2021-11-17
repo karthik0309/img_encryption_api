@@ -1,7 +1,10 @@
+import os
+import requests
 from PIL import Image 
+from io import BytesIO
 from Crypto.Cipher import AES 
 from .data_hiding import decode, encode 
-import os
+
 
 PATH = os.getcwd()+'/media/'
 
@@ -13,12 +16,15 @@ def convert_to_RGB(data):
     pixels = tuple(zip(r,g,b)) 
     return pixels 
      
-def process_image(filename,type,key,message,name): 
-    im = Image.open(filename) 
+def process_image(Img,key): 
+    print(Img.image.url)
+    response = requests.get(Img.image.url)
+    im = Image.open(BytesIO(response.content)) 
     
     decoded_data=''
-    if type=='encrypt':
-        im = encode(filename,message)
+    if Img.type.startswith('encrypt'):
+        im = encode(Img.image.url,Img.message)
+        
 
     data = im.convert("RGB").tobytes()  
     
@@ -27,11 +33,11 @@ def process_image(filename,type,key,message,name):
     secrete_key=key[0:32]
     IV = key[0:16]
 
-    if type=='encrypt_cbc':
+    if Img.type=='encrypt_cbc':
         new = convert_to_RGB(aes_cbc_encrypt(secrete_key, pad(data),IV)[:original]) 
-    elif type=='encrypt_ecb':
+    elif Img.type=='encrypt_ecb':
         new = convert_to_RGB(aes_ecb_encrypt(secrete_key, pad(data))[:original])
-    elif type=='decrypt_ecb':
+    elif Img.type=='decrypt_ecb':
         new = convert_to_RGB(aes_ecb_decrypt(secrete_key, pad(data))[:original])
     else:
         new = convert_to_RGB(aes_cbc_decrypt(secrete_key, pad(data),IV)[:original])  
@@ -39,14 +45,14 @@ def process_image(filename,type,key,message,name):
     im2 = Image.new(im.mode, im.size) 
     im2.putdata(new) 
     
-    if type.startswith('encrypt'):
-        im2.save(PATH+'encrypted_'+name+'.png','png')
+    if Img.type.startswith('encrypt'):
+        im2.save(PATH+'encrypted_'+Img.name+'.png','png')
     else:
-        im2.save(PATH+'decrypted_'+name+'.png','png')
+        im2.save(PATH+'decrypted_'+Img.name+'.png','png')
     
 
-    if type.startswith('decrypt'):    
-        decoded_data=decode(PATH+'decrypted_'+name+'.png')
+    if Img.type.startswith('decrypt'):    
+        decoded_data=decode(PATH+'decrypted_'+Img.name+'.png')
 
     return decoded_data
 

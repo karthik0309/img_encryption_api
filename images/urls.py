@@ -1,6 +1,6 @@
+from .api_views import *
 from rest_framework import routers, urlpatterns
 from rest_framework.routers import DefaultRouter
-from .api_views import *
 
 router = DefaultRouter()
 

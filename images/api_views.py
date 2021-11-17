@@ -1,12 +1,12 @@
-import os 
-from rest_framework import viewsets
-from rest_framework.response import Response
+import os
 from .serializers import ImageSerializer
 from .models import Images
-from users.models import User
 from .encryption import process_image
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from users.models import User
+from rest_framework import viewsets
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 PATH = os.getcwd()+'/media/'
 
@@ -24,34 +24,31 @@ class ImagesViewset(viewsets.ModelViewSet):
         info = request.data
         user = User.objects.get(id=info['user'])
 
-        print(info)
-        if info['type'].startswith('encrypt'):
-            new_img = Images(user=user,
+        new_img = Images(user=user,
                     name=info['name'],
                     image=info['image'],
-                    message=info['message']
+                    message=info['message'],
+                    type=info['type']
                     )
-
-            new_img.save()
+        new_img.save()
 
         secrete_key = user.secrete_key
-        decoded_message=process_image(info['image'],info['type'],secrete_key,info['message'],info['name'])
-
-        if info['type'].startswith('encrypt'):
-            image_file =PATH+'encrypted_'+info['name']+'.png'
-        else:
-            image_file =PATH+'decrypted_'+info['name']+'.png'
+        decoded_message=process_image(new_img,secrete_key)
 
         if info['type'].startswith('encrypt'):
             encrypted_img = Images(user=user,
             name='encrypted_'+info['name'],
-            image=image_file,
-            message=info['message'])
+            image=PATH+'encrypted_'+info['name']+'.png',
+            message=info['message'],
+            type=info['type']
+            )
         else:
             encrypted_img=Images(user=user,
             name='decrypted_'+info['name'],
-            image=image_file,
-            message=decoded_message)
+            image=PATH+'decrypted_'+info['name']+'.png',
+            message=decoded_message,
+            type=info['type']
+            )
 
 
         encrypted_img.save()

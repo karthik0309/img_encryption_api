@@ -1,4 +1,6 @@
+import requests
 from PIL import Image
+from io import BytesIO
 
 def genData(data):
         newd = []
@@ -60,7 +62,8 @@ def encode_enc(newimg, data):
             x += 1
 
 def encode(filename,data):
-    image = Image.open(filename, 'r')
+    response = requests.get(filename)
+    image = Image.open(BytesIO(response.content)) 
     newimg = image.copy()
     encode_enc(newimg, data)
     return newimg
