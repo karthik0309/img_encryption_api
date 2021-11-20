@@ -14,6 +14,7 @@ import cloudinary
 import django_heroku
 import dj_database_url
 from pathlib import Path
+from decouple import config
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5ue3!!#e_ys96pf4r@mf3=n1qwvvdaa!@@&o8i4pb$y*ax9g5$'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -95,7 +96,7 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': False,
 
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': os.getenv('SECRET_KEY'),
+    'SIGNING_KEY': SECRET_KEY,
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
     'ISSUER': None,
@@ -121,20 +122,20 @@ SIMPLE_JWT = {
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE':'django.db.backends.postgresql_psycopg2',
-#         'NAME':'img_ency',
-#         'USER':'apple',
-#         'PASSWORD':'apple',
-#         'HOST':'localhost',
-#         'PORT':'5432',
-#     }
-# }
-
-DATABASES={
-    'default':dj_database_url.config()
+DATABASES = {
+    'default': {
+        'ENGINE':'django.db.backends.postgresql_psycopg2',
+        'NAME':'img_ency',
+        'USER':'apple',
+        'PASSWORD':'apple',
+        'HOST':'localhost',
+        'PORT':'5432',
+    }
 }
+
+# DATABASES={
+#     'default':dj_database_url.config()
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -186,9 +187,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL='users.User'
 
 cloudinary.config( 
-  cloud_name = os.getenv('CLOUD_NAME'), 
-  api_key = os.getenv('API_KEY'), 
-  api_secret = os.getenv('API_SCERETE')
+  cloud_name = config('CLOUD_NAME'), 
+  api_key = config('API_KEY'), 
+  api_secret = config('API_SCERETE')
 )
 
 django_heroku.settings(locals())
