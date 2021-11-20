@@ -35,17 +35,23 @@ class ImagesViewset(viewsets.ModelViewSet):
         secrete_key = user.secrete_key
         decoded_message=process_image(new_img,secrete_key)
 
+
+        if info['type'].startswith('encrypt'):
+            image_file =PATH+'encrypted_'+info['name']+'.png'
+        else:
+            image_file =PATH+'decrypted_'+info['name']+'.png'
+
         if info['type'].startswith('encrypt'):
             encrypted_img = Images(user=user,
             name='encrypted_'+info['name'],
-            image=PATH+'encrypted_'+info['name']+'.png',
+            image=image_file,
             message=info['message'],
             type=info['type']
             )
         else:
             encrypted_img=Images(user=user,
             name='decrypted_'+info['name'],
-            image=PATH+'decrypted_'+info['name']+'.png',
+            image=image_file,
             message=decoded_message,
             type=info['type']
             )
