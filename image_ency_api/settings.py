@@ -192,9 +192,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL='users.User'
 
 cloudinary.config( 
-  cloud_name = config('CLOUD_NAME'), 
-  api_key = config('API_KEY'), 
-  api_secret = config('API_SCERETE')
+  cloud_name = 'img-ency', 
+  api_key = 287847771858394, 
+  api_secret ='nCHj7Zl4_Vtgh3PEgtGExr-IVwk'
 )
 
 django_heroku.settings(locals())
