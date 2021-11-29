@@ -11,10 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 import cloudinary
-import django_heroku
-import dj_database_url
 from pathlib import Path
-from decouple import config
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,11 +25,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-5ue3!!#e_ys96pf4r@mf3=n1qwvvdaa!@@&o8i4pb$y*ax9g5$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -43,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
+    'cloudinary',
     'rest_framework',
     'images',
     'users',
@@ -122,19 +121,11 @@ SIMPLE_JWT = {
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE':'django.db.backends.postgresql_psycopg2',
-#         'NAME':'img_ency',
-#         'USER':'apple',
-#         'PASSWORD':'apple',
-#         'HOST':'localhost',
-#         'PORT':'5432',
-#     }
-# }
-
-DATABASES={
-    'default':dj_database_url.config()
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 
 # Password validation
@@ -179,7 +170,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 
@@ -195,4 +186,8 @@ cloudinary.config(
   api_secret ='nCHj7Zl4_Vtgh3PEgtGExr-IVwk'
 )
 
-django_heroku.settings(locals())
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'img-ency',
+    'API_KEY': 287847771858394,
+    'API_SECRET': 'nCHj7Zl4_Vtgh3PEgtGExr-IVwk'
+}
