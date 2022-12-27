@@ -130,8 +130,8 @@ SIMPLE_JWT = {
 # }
 
 DATABASES={
-    'default':dj_database_url.config()
-}
+        'default': dj_database_url.config(default='postgresql://postgres:postgres@localhost:5432/mysite',conn_max_age=600)}
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
